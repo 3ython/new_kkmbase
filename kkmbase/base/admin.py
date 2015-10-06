@@ -5,6 +5,7 @@ from .models import Phonenumber
 from .models import Serviced
 from .models import Worker
 from .models import Inspection
+from .models import Device
 
 
 class WorkerServiced(admin.TabularInline):
@@ -37,3 +38,4 @@ admin.site.register(Phonenumber, PhonenumberAdmin)
 admin.site.register(Serviced, ServicedAdmin)
 admin.site.register(Worker, WorkerAdmin)
 admin.site.register(Inspection)
+admin.site.register(Device)
