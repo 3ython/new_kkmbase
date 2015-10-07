@@ -57,6 +57,7 @@ class Inspection(Organization):
         
 class DeviceName(models.Model):
     name = models.CharField(u'название: ', max_length=255)
+   #device = models.ForeignKey('Device', verbose_name=u'устройство', blank=True, null=True)
     def __unicode__(self):
         return u'%s' % (self.name)
     class Meta:
@@ -64,23 +65,27 @@ class DeviceName(models.Model):
         verbose_name_plural = u'виды техники'
         
 class FactoryName(models.Model):
-    name = models.CharField(u'производитель: ', max_length=255)
+    factory = models.CharField(u'производитель: ', max_length=255)
+   #device = models.ForeignKey('Device', verbose_name=u'устройство', blank=True, null=True)
     def __unicode__(self):
-        return u'%s, %s' % (self.name)
+        return u'%s' % (self.factory)
     class Meta:
         verbose_name = u'производитель'
         verbose_name_plural = u'производители'
     
 class AbstractDevice(models.Model):
-    device_name = models.ForeignKey('DeviceName', verbose_name=u'название техники', blank=True, null=True)
-    factory_name = models.ForeignKey('FactoryName', verbose_name=u'производитель', blank=True, null=True)
     factory_number = models.CharField(u'заводской номер', blank=True, max_length=255, null=True)
+    inventory_number = models.CharField(u'инвентарный номер', blank=True, max_length=255, null=True)
     class Meta:
         abstract = True
         
 class Device(AbstractDevice):
+    device_name = models.ForeignKey('DeviceName', verbose_name=u'название техники', blank=True, null=True)
+    factory_name = models.ForeignKey('FactoryName', verbose_name=u'производитель', blank=True, null=True)
+    def __unicode__(self):
+        return u'%s' % ('')
     class Meta:
-        #verbose_name = u'устройства'
+        verbose_name = u'устройства'
         verbose_name_plural = u'другие устройства'
     
     

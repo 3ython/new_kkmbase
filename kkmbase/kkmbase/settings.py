@@ -106,3 +106,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 #STATIC_URL = '\\C:\\Users\\root\Desktop\\django_prj\\kkmbase\\static\\'
+
+ADMIN_TOOLS_INDEX_DASHBOARD = 'base.dashboard.CustomIndexDashboard'
