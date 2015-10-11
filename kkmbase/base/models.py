@@ -55,20 +55,19 @@ class Inspection(Organization):
         verbose_name = u'налоговая инспекция'
         verbose_name_plural = u'налоговые инспекции'
         
-class DeviceName(models.Model):
-    name = models.CharField(u'название: ', max_length=255)
-   #device = models.ForeignKey('Device', verbose_name=u'устройство', blank=True, null=True)
+class DeviceModel(models.Model):
+    model_name = models.CharField(u'название/модель', max_length=255, blank=True, null=True)
+    factory = models.ForeignKey('Factory', verbose_name=u'производитель', blank=True, null=True)
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % (self.model_name)
     class Meta:
         verbose_name = u'вид техники'
         verbose_name_plural = u'виды техники'
         
-class FactoryName(models.Model):
-    factory = models.CharField(u'производитель: ', max_length=255)
-   #device = models.ForeignKey('Device', verbose_name=u'устройство', blank=True, null=True)
+class Factory(models.Model):
+    factory_name = models.CharField(u'производитель: ', max_length=255)
     def __unicode__(self):
-        return u'%s' % (self.factory)
+        return u'%s' % (self.factory_name)
     class Meta:
         verbose_name = u'производитель'
         verbose_name_plural = u'производители'
@@ -80,10 +79,11 @@ class AbstractDevice(models.Model):
         abstract = True
         
 class Device(AbstractDevice):
-    device_name = models.ForeignKey('DeviceName', verbose_name=u'название техники', blank=True, null=True)
-    factory_name = models.ForeignKey('FactoryName', verbose_name=u'производитель', blank=True, null=True)
+    device_model = models.ForeignKey('DeviceModel', verbose_name=u'модель', blank=True, null=True)
     def __unicode__(self):
-        return u'%s' % ('')
+        for c in dir(self.device_model.factory):
+            print c
+        return u'%s/%s' % (self.device_model.factory, self.device_model.model_name)
     class Meta:
         verbose_name = u'устройства'
         verbose_name_plural = u'другие устройства'

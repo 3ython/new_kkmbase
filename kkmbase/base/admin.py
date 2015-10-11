@@ -5,10 +5,9 @@ from .models import Phonenumber
 from .models import Serviced
 from .models import Worker
 from .models import Inspection
+from .models import Factory
 from .models import Device
-from .models import DeviceName
-from .models import FactoryName
-
+from .models import DeviceModel
 
 class WorkerServiced(admin.TabularInline):
     model = Worker
@@ -34,23 +33,23 @@ class PhonenumberAdmin(admin.ModelAdmin):
         (u'Введите номер телефона.', {'fields': ['number', 'details']}),
     ]
     
-class DeviceNameServiced(admin.TabularInline):
-    model = DeviceName
+class DeviceServiced(admin.TabularInline):
+    model = Device
     extra = 1
-class FactoryNameServiced(admin.TabularInline):
-    model = FactoryName
+class FactoryServiced(admin.TabularInline):
+    model = Factory
     extra = 1
     
 class DeviceAdmin(admin.ModelAdmin):
     fieldsets = [
-        (u'устройство: ', {'fields': ['device_name', 'factory_name', 'factory_number', 'inventory_number']}),
+        (u'устройство: ', {'fields': ['device_model', 'factory_name']}),
     ]
-    #inlines = [DeviceNameServiced, FactoryNameServiced]
+    nlines = [Device]# Serviced, FactoryServiced]
 
 admin.site.register(Phonenumber, PhonenumberAdmin)
 admin.site.register(Serviced, ServicedAdmin)
 admin.site.register(Worker, WorkerAdmin)
 admin.site.register(Inspection)
-admin.site.register(Device)
-#admin.site.register(DeviceName)
-#admin.site.register(FactoryName)
+admin.site.register(Device, DeviceAdmin)
+admin.site.register(DeviceModel)
+admin.site.register(Factory)
