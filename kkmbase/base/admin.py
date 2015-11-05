@@ -5,13 +5,14 @@ from .models import Phonenumber
 from .models import Serviced
 from .models import Worker
 from .models import Inspection
-from .models import Factory
+from .submodels import Brand
 from .models import Device
 from .models import DeviceModel
 from .models import ControlCashMachine
 from .models import RegistrationData
-from .submodels import RegistrationDate
-from .submodels import DeregistrationDate
+#from .submodels import RegistrationDate
+#from .submodels import DeregistrationDate
+from .submodels import Version
 
 class WorkerServiced(admin.TabularInline):
     model = Worker
@@ -21,7 +22,7 @@ class PhonenumberServiced(admin.TabularInline):
     extra = 1
 class ServicedAdmin(admin.ModelAdmin):
     fieldsets = [
-        (u'организация: ', {'fields': ['name', 'inn', 'address', 'inspection']}),
+        (u'организация: ', {'fields': ['name', 'inn', 'address', 'inspection', 'work_hours']}),
     ]
     inlines = [WorkerServiced, PhonenumberServiced]   
     
@@ -52,7 +53,7 @@ class DeviceServiced(admin.TabularInline):
     model = Device
     extra = 1
 class FactoryServiced(admin.TabularInline):
-    model = Factory
+    model = Brand
     extra = 1
     
 class DeviceAdmin(admin.ModelAdmin):    
@@ -69,8 +70,9 @@ admin.site.register(Worker, WorkerAdmin)
 admin.site.register(Inspection, InspectionAdmin)
 admin.site.register(Device, DeviceAdmin)
 admin.site.register(DeviceModel)
-admin.site.register(Factory)
+admin.site.register(Brand)
 admin.site.register(ControlCashMachine, ControlCashMachineAdmin)
-admin.site.register(RegistrationDate)
-admin.site.register(DeregistrationDate)
+#admin.site.register(RegistrationDate)
+#admin.site.register(DeregistrationDate)
 admin.site.register(RegistrationData)
+admin.site.register(Version)

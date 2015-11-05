@@ -2,18 +2,9 @@
 from django.db import models
 from django.db.models import CharField
 from django.db.models import ForeignKey
-#from submodels.RegistrationInformation import DeregistrationDate
-
-class Organization(models.Model):
-    name    = CharField(u'Название: ', blank=True, max_length=255, null=True)
-    address = CharField(u'Адрес: ', blank=True, max_length=255, null=True)    
-    class Meta:
-        abstract = True
-        
-class Person(models.Model):
-    name = CharField(u'Имя', max_length=255)    
-    class Meta:
-        abstract = True
+from submodels.Organization import Organization
+from submodels.AbstractDevice import AbstractDevice
+from submodels.Person import Person
         
 class Phonenumber(models.Model):
     number = CharField(u'номер', max_length=255, unique=True)
@@ -61,26 +52,13 @@ class Inspection(Organization):
         
 class DeviceModel(models.Model):
     model_name = CharField(u'название/модель', max_length=255, blank=True, null=True)
-    factory = ForeignKey('Factory', verbose_name=u'производитель', blank=True, null=True)
+    brand = ForeignKey('Brand', verbose_name=u'производитель', blank=True, null=True)
+    version = ForeignKey('Version', verbose_name=u'версия', blank=True, null=True)
     def __unicode__(self):
         return u'%s' % (self.model_name)
     class Meta:
         verbose_name = u'вид техники'
         verbose_name_plural = u'виды техники'
-        
-class Factory(models.Model):
-    factory_name = CharField(u'производитель: ', max_length=255)
-    def __unicode__(self):
-        return u'%s' % (self.factory_name)
-    class Meta:
-        verbose_name = u'производитель'
-        verbose_name_plural = u'производители'
-    
-class AbstractDevice(models.Model):
-    factory_number = CharField(u'заводской номер', blank=True, max_length=255, null=True)
-    inventory_number = CharField(u'инвентарный номер', blank=True, max_length=255, null=True)
-    class Meta:
-        abstract = True
         
 class Device(AbstractDevice):
     device_model = ForeignKey('DeviceModel', verbose_name=u'модель', blank=True, null=True)
@@ -105,11 +83,14 @@ class ControlCashMachine(AbstractDevice):
         verbose_name_plural = u'ККМ'
 
 class RegistrationData(models.Model):
+    registration_number = CharField(u'регистрационный номер', max_length=10, blank=True, null=True)
     control_cash_machine = ForeignKey('ControlCashMachine', verbose_name=u'ККМ', blank=True, null=True)
-    registration_date = models.ForeignKey('RegistrationDate', verbose_name=u'дата регистрации', blank=True, null=True)
-    deregistration_date = models.ForeignKey('DeregistrationDate', verbose_name=u'дата снятия с регистрации', blank=True, null=True)
+   #registration_date = models.ForeignKey('RegistrationDate', verbose_name=u'дата регистрации', blank=True, null=True)
+   #deregistration_date = models.ForeignKey('DeregistrationDate', verbose_name=u'дата снятия с регистрации', blank=True, null=True)
+    registration_date = models.DateField(verbose_name=u'дата регистрации', blank=True, null=True)
+    deregistration_date = models.DateField(verbose_name=u'дата снятия с регистрации', blank=True, null=True)
     def __unicode__(self):
-        return u'%s' % (self.deregistration_date)
+        return u'%s-%s-%s' % (self.registration_date, self.deregistration_date, self.registration_number)
     class Meta:
         verbose_name = u'сведение о регистрации'
         verbose_name_plural = u'сведения о регистрациях'

@@ -2,5 +2,6 @@
 
 from RegistrationInformation import RegistrationDate
 from RegistrationInformation import DeregistrationDate
-#from RegistrationInformation import RegistrationData
+from Brand import Brand
+from Version import Version
 
