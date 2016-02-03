@@ -20,5 +20,6 @@ from base import views
 urlpatterns = [
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index, name='index'),
+    #url(r'^$', views.index, name='index'),
+    url(r'^$', include(admin.site.urls), name='index'),
 ]
