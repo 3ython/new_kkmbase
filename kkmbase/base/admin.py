@@ -1,6 +1,7 @@
 # coding= utf-8
 from django.contrib import admin
 
+
 from .models import Phonenumber
 from .models import Serviced
 from .models import Worker
@@ -50,31 +51,27 @@ class ControlCashMachineAdmin(admin.ModelAdmin):
 class DeviceModelServiced(admin.TabularInline):
     model = DeviceModel
     extra = 1
-#class DeviceServiced(admin.TabularInline):
-#    model = Brand
-#    extra = 1
+class ControlCashMachineServiced(admin.TabularInline):
+    model = ControlCashMachine
+    extra = 1
 
     
 class BrandAdmin(admin.ModelAdmin):
     fieldsets = [
-        (u'устройство: ', {'fields': ['brand_name',]})# 'factory_name']}),
+        (u'фирма изготовитель', {'fields': ['brand_name',]})
     ]
-    #def model_name(self, instance):
-        #return instance.model_name
-    inlines = [DeviceModelServiced, ]# Serviced, FactoryServiced]
+
+    inlines = [DeviceModelServiced, ]
 
 admin.site.register(Phonenumber, PhonenumberAdmin)
 admin.site.register(Serviced, ServicedAdmin)
 admin.site.register(Worker, WorkerAdmin)
 admin.site.register(Inspection, InspectionAdmin)
 
-#admin.site.register(Device, BrandAdmin)
-#admin.site.register(Device)
+admin.site.register(Device)
 
 admin.site.register(DeviceModel)
 admin.site.register(Brand, BrandAdmin)
 admin.site.register(ControlCashMachine, ControlCashMachineAdmin)
-#admin.site.register(RegistrationDate)
-#admin.site.register(DeregistrationDate)
 admin.site.register(RegistrationData)
 admin.site.register(Version)

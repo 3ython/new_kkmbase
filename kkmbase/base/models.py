@@ -90,7 +90,7 @@ class DeviceModel(models.Model):
 class AbstractDevice(models.Model):
     factory_number = CharField(u'заводской номер', blank=True, max_length=255, null=True)
     inventory_number = CharField(u'инвентарный номер', blank=True, max_length=255, null=True)
-    annotation = CharField(u'примечание: ', blank=True, max_length=255, null=True)
+    annotation = CharField(u'примечание', blank=True, max_length=255, null=True)
     class Meta:
         abstract = True
         
@@ -120,11 +120,14 @@ class ControlCashMachine(AbstractDevice):
 
 class RegistrationData(models.Model):
     registration_number = CharField(u'регистрационный номер', max_length=10, blank=True, null=True)
+    password_inspector = CharField(u'пароль налогового инспектора', max_length=10, blank=True, null=True)
     control_cash_machine = ForeignKey('ControlCashMachine', verbose_name=u'ККМ', blank=True, null=True)
     registration_date = models.DateField(verbose_name=u'дата регистрации', blank=True, null=True)
     deregistration_date = models.DateField(verbose_name=u'дата снятия с регистрации', blank=True, null=True)
     def __unicode__(self):
-        return u'%s-%s-%s' % (self.registration_date, self.deregistration_date, self.registration_number)
+        return u'%s ... %s  %s' % (self.registration_date.strftime("%d.%m.%Y"), 
+                              self.deregistration_date.strftime("%d.%m.%Y"), 
+                              self.registration_number)
     class Meta:
         verbose_name = u'сведение о регистрации'
         verbose_name_plural = u'сведения о регистрациях'
