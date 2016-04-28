@@ -2,18 +2,24 @@
 from django.db import models
 from django.db.models import CharField
 from django.db.models import ForeignKey
-        
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
+      
 class Phonenumber(models.Model):
     number = CharField(u'номер', max_length=255, unique=True)
     details = CharField(u'описание', max_length=255, blank=True, null=True)
-    worker = models.ForeignKey('Worker', verbose_name=u'сотрудник', blank=True, null=True)
-    organization = ForeignKey('Serviced', verbose_name=u'организация', blank=True, null=True)
-    inspection = ForeignKey('Inspection', verbose_name=u'налоговая инспекция', blank=True, null=True)
-    def __unicode__(self):    
-        if not self.worker == None: abonent = self.worker
-        if not self.organization == None: abonent = self.organization
-        if not self.inspection == None: abonent = self.inspection        
-        return u'%s/%s' % (abonent, self.number)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.IntegerField(db_index=True)
+    content_object = GenericForeignKey('content_type', 'object_id')
+    #worker = models.ForeignKey('Worker', verbose_name=u'сотрудник', blank=True, null=True)
+    #organization = ForeignKey('Serviced', verbose_name=u'организация', blank=True, null=True)
+    #inspection = ForeignKey('Inspection', verbose_name=u'налоговая инспекция', blank=True, null=True)
+    def __unicode__(self):
+        return u'%s' % (self.number)
+        #if not self.worker == None: abonent = self.worker
+        #if not self.organization == None: abonent = self.organization
+        #if not self.inspection == None: abonent = self.inspection        
+        #return u'%s/%s' % (abonent, self.number)
     class Meta:
         verbose_name = u'телефонный номер'
         verbose_name_plural = u'телефонные номера'
@@ -21,6 +27,7 @@ class Phonenumber(models.Model):
 class Organization(models.Model):
     name = CharField(u'Название: ', blank=True, max_length=255, null=True)
     address = CharField(u'Адрес: ', blank=True, max_length=255, null=True)
+    phone_number = GenericRelation('Phonenumber')
     description = CharField(u'описание: ', blank=True, max_length=255, null=True)
     work_hours = CharField(u'часы работы: ', blank=True, max_length=255, null=True)
     class Meta:
@@ -36,13 +43,15 @@ class Serviced(Organization):
         verbose_name_plural = u'обслуживаемые организации'
 
 class Person(models.Model):
-    name = CharField(u'Имя', max_length=255)    
+    name = CharField(u'Имя', max_length=255)
+    phone_number = GenericRelation('Phonenumber')
     class Meta:
         abstract = True
         
 class Worker(Person):
     workplace = ForeignKey(Serviced, verbose_name = u'место работы', blank=True, null=True)    
-    status = CharField(verbose_name=u'должность',max_length=255, blank=True, null=True)    
+    status = CharField(verbose_name=u'должность',max_length=255, blank=True, null=True)
+    #phone_number = GenericRelation('Phonenumber')    
     def __unicode__(self):
         if unicode(self.workplace).split()[0] == u'None':
             return u'%s, %s'% (self.name, self.status)
@@ -53,7 +62,8 @@ class Worker(Person):
         verbose_name_plural = u'сотрудники'
         
 class Inspection(Organization):
-    number = CharField(u'номер налоговой инспекции', max_length=8, unique=True)    
+    number = CharField(u'номер налоговой инспекции', max_length=8, unique=True)
+    #phone_number = GenericRelation('Phonenumber')    
     def __unicode__(self):
         return u'ИФНС № %s' % (self.number)
     class Meta:
